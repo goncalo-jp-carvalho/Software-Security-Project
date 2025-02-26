@@ -1,0 +1,38 @@
+[
+  {
+    "vulnerability": "SQL Injection A",
+    "sources": ["request.values", "form.cleaned_data", "session.get", "url_for", "json.loads"],
+    "sanitizers": ["sqlalchemy.text", "quote_plus", "escape"],
+    "sinks": ["execute", "execute_many", "sqlalchemy.sql.expression.text"],
+    "implicit": "no"
+  },
+  {
+    "vulnerability": "XSS A",
+    "sources": ["request.args", "cookies.get", "flask.request.data", "request.headers.get", "jinja2.Template"],
+    "sanitizers": ["bleach.clean", "html.escape", "jinja2.escape", "markupsafe.escape"],
+    "sinks": ["flask.render_template_string", "MarkupSafe.Markup", "jinja2.Environment.from_string", "HttpResponse"],
+    "implicit": "yes"
+  },
+  {
+    "vulnerability": "Command Injection A",
+    "sources": ["sys.argv", "os.getenv", "input()", "flask.request.form", "argparse.ArgumentParser.parse_args"],
+    "sanitizers": ["shlex.quote", "re.escape", "escape_shell_command"],
+    "sinks": ["subprocess.run", "os.system", "os.popen", "subprocess.Popen"],
+    "implicit": "no"
+  },
+  {
+    "vulnerability": "Directory Traversal A",
+    "sources": ["flask.request.files", "request.POST.get", "open", "Path.glob", "os.listdir"],
+    "sanitizers": ["os.path.abspath", "os.path.normpath", "safe_join", "pathlib.Path.resolve"],
+    "sinks": ["open", "os.rename", "shutil.move", "pathlib.Path.open"],
+    "implicit": "yes"
+  },
+  {
+    "vulnerability": "Remote Code Execution A",
+    "sources": ["eval", "exec", "pickle.loads", "yaml.load", "jsonpickle.decode"],
+    "sanitizers": ["literal_eval", "safe_load", "json.loads"],
+    "sinks": ["eval", "exec", "pickle.loads", "yaml.load", "jsonpickle.decode"],
+    "implicit": "no"
+  }
+]
+
